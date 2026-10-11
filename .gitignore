@@ -1,0 +1,15 @@
+# Installed by pnpm when this package is a dependency of a profile.
+node_modules/
+
+# `client.js` is a build artifact, but it is committed on purpose: a git
+# install must not need a build step, and `prepare` only runs where the source
+# and the vendored chart runtime are both present.
+# Rebuild it with `npm run build` after changing anything under lib/ or src/.
+
+# macOS
+.DS_Store
+
+# Logs and editor state
+*.log
+.idea/
+.vscode/

@@ -1,0 +1,24 @@
+# Intelligent UI bundle layer.
+#
+# One row carries both halves of the plugin:
+#
+#   * `index.js`  — the Host half. Registers the model-facing `render_ui` tool,
+#                   compiles DIL into a JavaScript program + constants table at
+#                   tool-call time (this plugin's "server-side compilation"
+#                   layer), and attaches the DIL protocol and component catalog
+#                   to the system prompt.
+#   * `client.js` — the browser half, discovered from this package's
+#                   `dsh.client` manifest and served as a client module. It owns
+#                   the sandboxed runtime, the reconciler, the catalog renderer
+#                   and the interaction channel.
+- insert:
+    - id: intelligent-ui
+      name: '@comeonzhj/dsh-intelligent-ui'
+      config:
+        # Attach the DIL protocol + component catalog to the system prompt.
+        prompt: true
+        # `full` ships every property of every component; `compact` prints one
+        # line per component, for a small context window.
+        detail: full
+        # Language of the tool description and of the receipt handed back.
+        language: zh

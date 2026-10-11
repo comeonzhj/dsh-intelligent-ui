@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Intelligent UI",
+    "description": "The model writes the interface in DIL — Markdown plus JSX-like tags plus JavaScript. The host compiles it into a program and a constants table, a sandboxed client runtime executes it, and the result is text plus a rich, locally interactive card."
+  }
+}

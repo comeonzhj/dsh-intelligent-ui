@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # There are no dependencies to install: the build is plain node and the
+      # tests are node:test.
+      - name: Build the browser half
+        run: npm run build
+      - name: Fail if the committed client.js is stale
+        run: |
+          if ! git diff --quiet -- client.js; then
+            echo "::error::client.js is out of date — run 'npm run build' and commit the result."
+            git --no-pager diff --stat -- client.js
+            exit 1
+          fi
+      - name: Test
+        run: npm test

@@ -1,0 +1,93 @@
+{
+  "name": "@comeonzhj/dsh-intelligent-ui",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Intelligent UI for DeepSeek Harness — the model writes the interface in DIL (Markdown + JSX-like tags + JavaScript), the host compiles it into a program plus a constants table, and a sandboxed client runtime turns it into interactive text + rich card answers.",
+  "type": "module",
+  "license": "MIT",
+  "author": "comeonzhj",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "dsh-bundle",
+    "intelligent-ui",
+    "generative-ui",
+    "interactive-ui",
+    "dil",
+    "echarts"
+  ],
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./lib/compile": "./lib/compile.js",
+    "./lib/catalog": "./lib/catalog.js",
+    "./lib/prompt": "./lib/prompt.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "lib",
+    "src",
+    "scripts",
+    "vendor",
+    "locale",
+    "icon.svg",
+    "docs",
+    "cordis.patch.yml",
+    "README.md",
+    "README.en.md",
+    "LICENSE",
+    "CONTRIBUTING.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs",
+    "prepare": "node scripts/build-client.mjs",
+    "test": "node scripts/build-client.mjs && node --test 'test/*.test.mjs'",
+    "test:only": "node --test 'test/*.test.mjs'",
+    "dev": "node scripts/dev-profile.mjs --boot"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-tool",
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-tools": "^0.2.0-rc.2",
+    "@deepseek-ai/dsh-system-prompt": "^0.2.0-rc.2"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-tools": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-system-prompt": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/comeonzhj/dsh-intelligent-ui.git"
+  },
+  "homepage": "https://github.com/comeonzhj/dsh-intelligent-ui#readme",
+  "bugs": {
+    "url": "https://github.com/comeonzhj/dsh-intelligent-ui/issues"
+  }
+}

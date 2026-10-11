@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Intelligent UI 智能界面",
+    "description": "模型用 DIL 写界面：Markdown 文字 + JSX 风格标签 + JavaScript。宿主编译成程序与常量表，浏览器在沙箱里执行，生成文字 + 富卡片，交互在本地完成。"
+  }
+}
