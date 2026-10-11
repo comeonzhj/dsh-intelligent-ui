@@ -380,7 +380,8 @@ npm run dev            # 起一个隔离 profile 试玩
 ```
 
 改动 `lib/` 或 `src/` 之后**必须 `npm run build`**：`client.js` 是构建产物，
-但它**故意提交进仓库**，这样 git 安装和 GitHub 安装都不需要构建步骤。
+但它**故意提交进仓库**，这样 git 安装和 GitHub 安装都不需要构建步骤
+（也正因为没有 `prepare` 脚本，pnpm 不会在安装时拦你）。
 
 ### 发布
 

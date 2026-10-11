@@ -418,7 +418,8 @@ npm run dev            # boot an isolated profile
 
 **Run `npm run build` after changing anything under `lib/` or `src/`.**
 `client.js` is a build artifact, but it is committed on purpose so that both git
-and GitHub installs need no build step.
+and GitHub installs need no build step — and because there is no `prepare`
+script, pnpm has nothing to block at install time.
 
 ### Publishing
 

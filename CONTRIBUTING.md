@@ -26,8 +26,9 @@ npm run build
 Run it after touching anything under `lib/`, `src/`, `scripts/`, or `vendor/`.
 It is committed on purpose so that a `git` or GitHub install needs no build
 step — a plugin that only works after `npm install && npm run build` is a plugin
-most people will never get running. CI checks that the committed artifact is
-current.
+most people will never get running, and pnpm blocks git-hosted install scripts
+anyway. `prepack` rebuilds it for `npm pack` / `npm publish`; CI checks that the
+committed artifact is current.
 
 ## Where things live
 
@@ -43,6 +44,11 @@ current.
 | `src/client/components.js` | Catalog → harness design system. |
 | `src/client/app.js` | The two card seats, streaming, interaction, the answer channel. |
 | `test/` | One file per layer. |
+
+Note there is deliberately **no `prepare` script**: it would run on install,
+where pnpm 11 refuses to execute a git-hosted package's build scripts without an
+`allowBuilds` entry. A one-command install matters more than a build nobody
+needs.
 
 ## Adding a component
 

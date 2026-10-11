@@ -47,7 +47,7 @@
   ],
   "scripts": {
     "build": "node scripts/build-client.mjs",
-    "prepare": "node scripts/build-client.mjs",
+    "prepack": "node scripts/build-client.mjs",
     "test": "node scripts/build-client.mjs && node --test 'test/*.test.mjs'",
     "test:only": "node --test 'test/*.test.mjs'",
     "dev": "node scripts/dev-profile.mjs --boot"
