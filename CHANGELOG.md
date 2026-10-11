@@ -5,13 +5,11 @@ Versioning](https://semver.org/).
 
 ## 0.1.1 — 2026-10-11
 
-First public release.
+First release. `latest` points here.
 
-> Version 0.1.0 was staged by a publish that needed a two-factor approval, and
-> npm will not let a version be published over its own staged copy. The content
-> is identical; only the number moved.
-
-
+> `0.1.0` carries identical content and landed moments earlier while the release
+> was being verified, so both versions exist. `0.0.0-stage` is npm's
+> staged-publish placeholder — not installable content.
 
 **The pipeline**
 
