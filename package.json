@@ -1,6 +1,6 @@
 {
   "name": "@comeonzhj/dsh-intelligent-ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "description": "Intelligent UI for DeepSeek Harness — the model writes the interface in DIL (Markdown + JSX-like tags + JavaScript), the host compiles it into a program plus a constants table, and a sandboxed client runtime turns it into interactive text + rich card answers.",
   "type": "module",

@@ -1,5 +1,10 @@
 # Intelligent UI · 智能界面
 
+[![npm](https://img.shields.io/npm/v/@comeonzhj/dsh-intelligent-ui?label=npm)](https://www.npmjs.com/package/@comeonzhj/dsh-intelligent-ui)
+[![CI](https://github.com/comeonzhj/dsh-intelligent-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/comeonzhj/dsh-intelligent-ui/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/@comeonzhj/dsh-intelligent-ui)](LICENSE)
+[![tests](https://img.shields.io/badge/tests-91-brightgreen)](test)
+
 **让 DSH 的回答变成「文字 + 富卡片」。**
 
 模型用 **DIL** 写界面——Markdown 写文字，JSX 风格标签写组件，JavaScript 写状态与计算。

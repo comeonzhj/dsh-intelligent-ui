@@ -1,5 +1,10 @@
 # Intelligent UI
 
+[![npm](https://img.shields.io/npm/v/@comeonzhj/dsh-intelligent-ui?label=npm)](https://www.npmjs.com/package/@comeonzhj/dsh-intelligent-ui)
+[![CI](https://github.com/comeonzhj/dsh-intelligent-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/comeonzhj/dsh-intelligent-ui/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/@comeonzhj/dsh-intelligent-ui)](LICENSE)
+[![tests](https://img.shields.io/badge/tests-91-brightgreen)](test)
+
 **Text + rich card answers for DeepSeek Harness.**
 
 The model writes the interface in **DIL** — Markdown for prose, JSX-like tags for
