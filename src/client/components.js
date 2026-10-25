@@ -18,6 +18,8 @@
 
 import { SPACE, RADIUS, SIZE, WEIGHT } from '../../lib/catalog.js'
 import { buildChartOption, readTokens } from './chart.js'
+import { MAX_MATH_LENGTH } from './math.js'
+import { renderMathIsolated } from './math-worker.js'
 
 /**
  * Whether this bundle carries the vendored chart runtime.
@@ -398,6 +400,54 @@ export function createRenderers(React) {
       color: TEXT_PRIMARY,
     },
   }, ...kids(node, ctx))
+  // Parsing stays off the page thread. Cancel obsolete work on an edit/unmount;
+  // key results to tex/display so a late response never paints an older formula.
+  function MathView(props) {
+    const display = props.display === true
+    const [rendered, setRendered] = React.useState(null)
+    React.useEffect(() => {
+      const controller = new AbortController()
+      let current = true
+      renderMathIsolated(props.tex, display, controller.signal).then((result) => {
+        if (current) setRendered({ tex: props.tex, display, result })
+      })
+      return () => { current = false; controller.abort() }
+    }, [props.tex, display])
+    const result = rendered?.tex === props.tex && rendered?.display === display ? rendered.result : null
+    const style = {
+      color: props.tone === undefined ? 'inherit' : toneOf(props.tone).fg,
+      fontSize: props.size === undefined ? 'inherit' : SIZE[props.size] ?? 'inherit',
+      maxWidth: '100%',
+      minWidth: display ? 0 : undefined,
+      overflowX: display ? 'auto' : undefined,
+      marginBlock: display ? spaceOf(2) : undefined,
+    }
+    if (result === null) {
+      return h(display ? 'div' : 'span', {
+        className: 'iui-math-pending', 'aria-busy': true, style,
+      }, typeof props.tex === 'string' ? props.tex.slice(0, 120) : '[formula]')
+    }
+    if (result.error !== null) {
+      const source = typeof props.tex === 'string' ? props.tex : '[formula]'
+      return h(display ? 'div' : 'span', {
+        className: 'iui-math-error', role: 'note', title: result.error,
+        style: {
+          ...style, color: toneOf(props.tone ?? 'error').fg,
+          fontFamily: 'var(--ds-font-family-code, ui-monospace, monospace)',
+          whiteSpace: 'pre-wrap', overflowWrap: 'anywhere',
+        },
+      }, source.slice(0, MAX_MATH_LENGTH), source.length > MAX_MATH_LENGTH ? '…' : null)
+    }
+    return h(display ? 'div' : 'span', {
+      className: 'iui-math', style,
+      // Only KaTeX's trust:false MathML reaches this sink. Model input is never
+      // inserted as markup; every failure takes the escaped text path above.
+      dangerouslySetInnerHTML: { __html: result.markup },
+    })
+  }
+
+  const math = (node) => h(MathView, { ...node.props, key: node.id })
+
   const caption = (node, ctx) => h('div', { key: node.id, style: { fontSize: SIZE.sm, lineHeight: 1.5, color: toneOf(node.props.tone ?? 'muted').fg } }, ...kids(node, ctx))
   const labelNode = (node, ctx) => h('div', { key: node.id, style: { fontSize: SIZE.sm, fontWeight: WEIGHT.medium, color: TEXT_SECONDARY } }, ...kids(node, ctx))
   const link = (node, ctx) => h('a', {
@@ -1152,7 +1202,7 @@ export function createRenderers(React) {
 
   const COMPONENTS = {
     box, row, grid, card, divider, spacer, scroll, tabs, tab, reveal, columns,
-    title, text: bodyText, bold, italic, code, caption, label: labelNode, link, kbd, quote, callout, list, item,
+    title, text: bodyText, bold, italic, code, math, caption, label: labelNode, link, kbd, quote, callout, list, item,
     slider, switch: switchNode, checkbox, radio, segmented, select, input, textarea, stepper, rating, option, field, button, actions, form,
     table, kv, stat, progress, badge, pill, avatar, image, gallery, icon, chart, sparkline, timeline, steps, codeblock, json,
   }

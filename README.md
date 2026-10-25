@@ -199,6 +199,25 @@ DIL.render(__dil.jsx(() => {
 | `<reveal>` | 展开 / 收起 | — |
 | `<link>` | 打开链接 | — |
 
+### LaTeX 公式
+
+`<math>` 是受控的 DIL 组件，不需要切换到 HTML：
+
+```dil
+<text>行内分式 <math tex="\\frac{1}{2}"/> 与文字同行。</text>
+<math tex="\\sum_{i=1}^n i = \\frac{n(n+1)}{2}" display size="lg" tone="brand"/>
+{@body const matrix = String.raw`\begin{pmatrix}a&b\\c&d\end{pmatrix}`}
+<math tex={matrix} display/>
+```
+
+- `tex` 是 LaTeX 字符串；`display` 默认为 `false`，独立公式在自身范围内横向滚动。
+- 引号字符串里的反斜杠需要写两次；复杂公式可像示例一样绑定 `String.raw`。不要把公式直接放在标签正文中，也不自动解析 `$…$` 或 `$$…$$`。
+- 默认继承周围字号和颜色；`size`、`tone` 使用现有 token。状态改变 `tex` 时，公式也在本地更新。
+- 随插件离线内置 KaTeX 0.19.1，仅在独立公式 Worker 中按需运行，只输出浏览器原生 MathML。无需 CDN、外部字体或 KaTeX CSS，也不依赖壳层样式；需要支持 MathML Core 的浏览器（如当前 Chromium）。
+- 使用 KaTeX 支持的 LaTeX 子集，不是完整的 TeX 引擎。无效、不支持或超出资源预算的公式降级为源文，悬停可看错误，不影响其他组件；浏览器禁用 Worker 时也采用此回退，不在页面线程解析。
+- 输入最多 8192 字符、宏展开最多 1000 次；库的尺寸限制之外，还检查 MathML 的数值布局属性。每项渲染时限 1 秒（包括 Worker 启动），最多 32 项待处理，输出最多 64 KiB 字符和 2048 个元素。修改或移除公式会取消旧任务；超时终止 Worker，后续任务可恢复，空闲时释放 Worker。
+- 禁用可信命令，不开放链接、图片或 HTML 属性，宏定义不跨公式共享。KaTeX 不进入页面线程或执行 DIL 的 Worker。
+
 ### 图表
 
 用 Apache ECharts 绘制（vendor 的是 common 构建，698 KB，随 `client.js` 内联）。
@@ -231,7 +250,7 @@ DIL.render(__dil.jsx(() => {
 ### 静态展示组件
 
 `box` `row` `grid` `card` `divider` `spacer` `scroll` `columns`
-`title` `text` `bold` `italic` `code` `caption` `label` `kbd` `quote` `callout` `list` `item`
+`title` `text` `bold` `italic` `code` `math` `caption` `label` `kbd` `quote` `callout` `list` `item`
 `table` `kv` `stat` `progress` `badge` `pill` `avatar` `image` `gallery` `icon`
 `sparkline` `timeline` `steps` `codeblock` `json`
 

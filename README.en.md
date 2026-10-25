@@ -216,6 +216,25 @@ control with a `name` contributes its current value to the answer.
 | `<reveal>` | expand / collapse | — |
 | `<link>` | open a URL | — |
 
+### LaTeX formulas
+
+`<math>` is a controlled DIL component, not an HTML escape hatch:
+
+```dil
+<text>A fraction <math tex="\\frac{1}{2}"/> within prose.</text>
+<math tex="\\sum_{i=1}^n i = \\frac{n(n+1)}{2}" display size="lg" tone="brand"/>
+{@body const matrix = String.raw`\begin{pmatrix}a&b\\c&d\end{pmatrix}`}
+<math tex={matrix} display/>
+```
+
+- `tex` is the LaTeX string; `display` defaults to `false`. Display formulas scroll horizontally within their own container.
+- Double backslashes in quoted strings, or bind a `String.raw` template literal as above. Do not put formulas in children; `$…$` and `$$…$$` are not automatically parsed.
+- Size and colour inherit from surrounding text; `size` and `tone` accept the existing tokens. Changing `tex` through local state updates the formula without calling the model.
+- KaTeX 0.19.1 is vendored offline and evaluated on demand only in a separate formula Worker. It outputs native MathML: no CDN, external fonts, KaTeX CSS, or dependency on shell styles. A MathML Core browser (such as current Chromium) is required.
+- This supports KaTeX's LaTeX subset, not a full TeX engine. Invalid, unsupported or over-budget formulas fall back to source text with an error tooltip, without breaking other components. If Workers are unavailable, it takes that same fallback rather than parsing on the page thread.
+- Input is limited to 8192 characters and macro expansion to 1000; generated numerical layout attributes are checked in addition to the engine's size limit. Each job has a 1-second deadline (including Worker startup), at most 32 jobs may be pending, and output is limited to 64 Ki characters and 2048 elements. Editing/unmounting cancels obsolete work; timeouts terminate the Worker and later jobs recover. Idle Workers are released.
+- Trusted commands are disabled: no links, images or HTML attributes. Macro definitions are not shared across formulas. KaTeX runs neither on the page thread nor inside the DIL execution Worker.
+
 ### Charts
 
 Drawn with Apache ECharts (the vendored *common* build, 698 KB, inlined into
@@ -251,7 +270,7 @@ Drawn with Apache ECharts (the vendored *common* build, 698 KB, inlined into
 ### Static components
 
 `box` `row` `grid` `card` `divider` `spacer` `scroll` `columns`
-`title` `text` `bold` `italic` `code` `caption` `label` `kbd` `quote` `callout` `list` `item`
+`title` `text` `bold` `italic` `code` `math` `caption` `label` `kbd` `quote` `callout` `list` `item`
 `table` `kv` `stat` `progress` `badge` `pill` `avatar` `image` `gallery` `icon`
 `sparkline` `timeline` `steps` `codeblock` `json`
 

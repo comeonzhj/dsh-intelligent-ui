@@ -305,3 +305,29 @@ test('the operations the runner emits are integer-encoded arrays', async () => {
   // The program never travels back to the page.
   assert.equal(typeof batch.code, 'undefined')
 })
+
+test('LaTeX strings survive the locked runner and update with local state', async () => {
+  const { exports } = await loadBundle()
+  const { context, sent, send } = startRunner(exports.runnerSource)
+  assert.equal(vm.runInContext('typeof __IUI_KATEX_LOAD', context), 'undefined')
+  const compiled = compileDil(String.raw`{@body const [n, setN] = DIL.useState(2)}
+{@body const formula = "\\frac{1}{" + n + "}"}
+<slider min={1} max={9} value={n} onChange={setN}/>
+<math tex={formula} display/>`)
+  assert.deepEqual(compiled.diagnostics, [])
+  send({ t: 'program', code: compiled.code, constants: compiled.constants })
+  const batch = sent.at(-1)
+  assert.equal(batch.ok, true, batch.error?.message)
+  const root = { id: ROOT_ID, childrenOrder: [], children: [] }
+  const handlers = []
+  const nodes = decodeTree(batch, { root, onHandler: (id) => { handlers.push(id); return () => {} } })
+  const formula = () => [...nodes.values()].find((node) => node.type === 'math')
+  assert.equal(formula().props.tex, String.raw`\frac{1}{2}`)
+  assert.equal(formula().props.display, true)
+  assert.equal(handlers.length, 1)
+  send({ t: 'event', handler: handlers[0], args: [4] })
+  const update = sent.at(-1)
+  assert.equal(update.ok, true, update.error?.message)
+  decodeTree(update, { nodes, root })
+  assert.equal(formula().props.tex, String.raw`\frac{1}{4}`)
+})

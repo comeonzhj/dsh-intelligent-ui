@@ -130,6 +130,8 @@ test('a whole catalog example document compiles cleanly', () => {
     '  <timeline items={[{title:"Shipped", time:"today", body:"done"}]}/>',
     '  <steps steps={[{title:"One",done:true},{title:"Two"}]} current={1}/>',
     '  <codeblock language="js" filename="a.js">const a = 1</codeblock>',
+    '  <text>Inline <math tex="x^2"/> formula.</text>',
+    '  <math tex="a^2+b^2=c^2" display size="lg" tone="brand"/>',
     '  <json value={{"a":1}} label="payload"/>',
     '  <callout tone="warn" title="Heads up">Watch the quota.</callout>',
     '  <quote cite="Docs">Quoted.</quote>',

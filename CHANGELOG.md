@@ -3,6 +3,18 @@
 Notable changes, newest first. This project follows [Semantic
 Versioning](https://semver.org/).
 
+## Unreleased
+
+- Add `<math tex="…" display size="lg" tone="brand"/>` for inline and display
+  LaTeX formulas, using vendored KaTeX 0.19.1 to output native MathML offline.
+  No runtime dependencies, external fonts, stylesheet or network requests.
+- Run the lazy formula runtime in a separate, cancellable Worker, not on the page
+  thread or in the DIL runner. Bound source, expansion, output size/elements,
+  layout dimensions, queue length and render time; isolate macros per formula
+  and fall back to local source text on errors or unavailable Workers.
+- Document escaped LaTeX strings in the English and Chinese model prompts and
+  READMEs; add real-vendor, generated-bundle and locked-runner formula tests.
+
 ## 0.1.1 — 2026-10-11
 
 First release. `latest` points here.
